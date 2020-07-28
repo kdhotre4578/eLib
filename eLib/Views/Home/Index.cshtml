@@ -1,0 +1,100 @@
+﻿@{
+        ViewData["Title"] = "Home";
+ }
+
+@model eLib.ViewModel.LibraryDetailsVM
+    <div class="mainContainer">
+        @if (Model.Books.Count() > 0)
+        {
+            <div>
+                <h3>Books Available</h3>
+                <table style="border: 1px solid">
+                    <tr>
+                        <td>Book ID</td>
+                        <td>Book Name</td>
+                        <td>Quantity Present</td>
+                        <td></td>
+                    </tr>
+                    @foreach (var book in Model.Books)
+                    {
+                        @if (book.Quantity > 0)
+                        {
+                            <tr>
+                                <td>@book.Id</td>
+                                <td>@book.Name</td>
+                                <td>@book.Quantity</td>
+                                <td>
+                                    <button onclick="location.href ='@Url.Action("BorrowBook", "Home", new { bookId = book.Id })'"
+                                            class="form-control">
+                                        Borrow
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+                @if (ViewData["BorrowStatus"] != null && (string)ViewData["BorrowStatus"] != "")
+                {
+                    <p class="error">@ViewData["BorrowStatus"]</p>
+                }
+            </div>
+
+            @if (Model.BookBorrows.Count() > 0)
+            {
+                <div>
+                    <h3> Borrowed Books </h3>
+                    <table style="border: 1px solid">
+                        <tr>
+                            <td>ID</td>
+                            <td>Book Name</td>
+                            <td>User ID</td>
+                            <td></td>
+                        </tr>
+                        @foreach (var borrowedBook in Model.BookBorrows)
+                        {
+
+                            <tr>
+                                <td>@borrowedBook.BookId</td>
+                                <td>@borrowedBook.BookName</td>
+                                <td>@borrowedBook.UserId</td>
+                                <td>
+                                    <button onclick="location.href='@Url.Action("ReturnBook", "Home", new { bookId = borrowedBook.BookId })'"
+                                            class="form-control">
+                                        Return
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+        }
+        else
+        {
+            <div>
+                Library Empty...
+            </div>
+        }
+    </div>
+    <style>
+        td, tr {
+            border: 1px solid;
+            min-width: 25%;
+            text-align: center;
+        }
+
+        table 
+        {
+            width: 80%;
+        }
+
+        .mainContainer {
+            width: 80%;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+
+    </style>
